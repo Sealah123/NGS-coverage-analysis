@@ -22,6 +22,6 @@ This is a `README` file to explain the files and directory structure in this rep
 |   └── NGS_coverage_analysis.Rmd                                                            <- The R code to run coverage analysis
 ```
 >***NOTE:***
-> The following files are not excluded in the directory, due to their large size (> 1G): 
+> The following files are not included in the directory, due to their large size (> 1G): 
 - Data/NA12878.alt_bwamem_GRCh38DH.20150718.CEU.low_coverage.cram
 - Results/NA12878.alt_bwamem_GRCh38DH.20150718.CEU.low_coverage.bedtools_cov.txt (The downsampled file was provided)
