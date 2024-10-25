@@ -11,7 +11,7 @@ Please calculate the coverage(sequencing depth) for the given NA12878 BAM (https
 
 This analysis aims to assess read coverage across the entire genome (HG38) for the sample NA12878. My proposed analysis plan has two main aims.
 
-The first aim is to examine the read coverage at various genomic positions, and determine the average coverage across the genomewith the non-zero coverage. To accomplish this, we need to generate a coverage file for various genomic positions and calculate the following: the number of unique genomic positions with read coverage, the total number of reads that cover these positions, and the total length of the combined genomic positions. We can then use these values to calculate the average coverage.
+The first aim is to examine the read coverage at various genomic positions, and determine the average coverage across the genome with the non-zero coverage. To accomplish this, we need to generate a coverage file for various genomic positions and calculate the following: the number of unique genomic positions with read coverage, the total number of reads that cover these positions, and the total length of the combined genomic positions. We can then use these values to calculate the average coverage.
 
 The second aim is to analyze the distribution of read coverage across the genome, which will help to assess whether read coverage is evenly distributed throughout the genome or if there are any biases present. To accomplish this, we need to generate a histogram of coverage file to determine the fraction of bases on the chromosomes or the entire genome, along with their corresponding depth of coverage
 
