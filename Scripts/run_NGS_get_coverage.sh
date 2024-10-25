@@ -4,7 +4,7 @@ set -euo pipefail
 
 # Data directory
 
-
+# Check if the path is provided
 if [[ -z "$1" ]]; then
   log "Must supply the data path.\n"
   exit 1
@@ -21,7 +21,7 @@ else
     exit 1
 fi
 
-# the target file
+# The target file
 input_suffix=".cram"
 
 
@@ -31,10 +31,10 @@ for file1 in "${LOCAL_DATA_DIR}/Data/"*"${input_suffix}"; do
   sample="$(echo "$file1" | sed 's/\.cram//' | sed 's/Data/Results/')" 
   echo $sample
   
-  echo "Step 1: using Bedtools to get the coverage data: # of reads overlapping the position"
+  echo "Step 1: using Bedtools to get the coverage file"
   bedtools genomecov -ibam ${file1} -bg > ${sample}.bedtools_cov.txt 
 
-  echo "Step 2: using Bedtools to get the coverage histogram file: percent of reads overlapping the position"
+  echo "Step 2: using Bedtools to get the histogram of coverage file"
   bedtools genomecov -ibam ${file1} > ${sample}.bedtools_hist.txt 
 
   echo "Step 3a:  Extract the overall coverage stats from the coverage file"
