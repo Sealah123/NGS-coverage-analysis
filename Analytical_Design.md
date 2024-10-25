@@ -11,18 +11,18 @@ Please calculate the coverage(sequencing depth) for the given NA12878 BAM (https
 
 This analysis aims to assess read coverage across the entire genome (HG38) for the sample NA12878. My proposed analysis plan has two main aims.
 
-The first aim is to examine the read coverage at various genomic positions, and determine the average coverage across the genome with the non-zero coverage. To accomplish this, we need to generate a coverage file for various genomic positions and calculate the following: the number of unique genomic positions with read coverage, the total number of reads that cover these positions, and the total length of the combined genomic positions. We can then use these values to calculate the average coverage.
+The first aim is to examine the read coverage at various genomic positions, and determine the average coverage across the genome with non-zero coverage. To accomplish this, we need to generate a coverage file for various genomic positions and calculate the following: the number of unique genomic positions with read coverage, the total number of reads that cover these positions, and the total length of the combined genomic positions. We can then use these values to calculate the average coverage.
 
-The second aim is to analyze the distribution of read coverage across the genome, which will help to assess whether read coverage is evenly distributed throughout the genome or if there are any biases present. To accomplish this, we need to generate a histogram of coverage file to determine the fraction of bases on the chromosomes or the entire genome, along with their corresponding depth of coverage
+The second aim is to analyze the distribution of read coverage across the genome, which will help to assess whether read coverage is evenly distributed throughout the genome or if there are any biases present. To accomplish this, we need to generate a histogram of coverage file to determine the fraction of bases on the chromosomes or the entire genome, along with their corresponding depth of coverage.
 
 The detailed plan aims and objectives are listed below.
 
 ### Aims: 
-#### Aim 1: Examine the read coverage at various genomic location and determine the average read coverage depth across the genome with the non-zero coverage.
+#### Aim 1: Examine the read coverage at various genomic location and determine the average read coverage depth across the genome with non-zero coverage.
 ***Objectives:*** 
-* Generate a coverage file that displays the non-zero coverage for each position in the genome (base pairs with 0 coverage are excluded).
+* Generate a coverage file that displays the non-zero coverage for each position in the genome (base pairs with 0-coverage are excluded).
 * Count the total number of genomic positions with non-zero coverage.
-* Calculate the total number of reads by summing all the reads across genomic positions with the non-zero coverage.
+* Calculate the total number of reads by summing all the reads across genomic positions with non-zero coverage.
 * Calculate the average read coverage per read-covered genomic position.
    ```
    Formula: Coverage per sequenced position = Total_read_number / Total_postion_number
@@ -95,7 +95,7 @@ Example output:
 4. column 4: size of chromosome (or entire genome) in base pairs
 5. column 5: fraction of bases on chromosome (or entire genome) with depth equal to column 2.
 
-#### 4. Generate the coverage stats from the coverage file
+#### 4. Generate the coverage statistics from the coverage file
 
 ```
 awk '{sum+=$4; count++} END {print "Total number of reads across all read-covered positions: ", sum, "\nTotal number of reads-covered positions: ", count}' NA12878.alt_bwamem_GRCh38DH.20150718.CEU.low_coverage.bedtools_cov.txt > NA12878.alt_bwamem_GRCh38DH.20150718.CEU.low_coverage.bedtools_cov_sum_stat.txt 
