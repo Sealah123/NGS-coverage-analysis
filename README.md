@@ -25,3 +25,42 @@ This is a `README` file to explain the files and directory structure in this rep
 > The following files are not included in the directory, due to their large size (> 1G): 
 - Data/NA12878.alt_bwamem_GRCh38DH.20150718.CEU.low_coverage.cram
 - Results/NA12878.alt_bwamem_GRCh38DH.20150718.CEU.low_coverage.bedtools_cov.txt (The downsampled file was provided)
+
+## Analysis results
+
+NGS_coverage_analysis.html
+
+## Scripts & Outputs:
+1. Generate the coverage files. 
+    run_NGS_get_coverage.sh
+
+Within the project root directory, run the scripts: 
+```
+    LOCAL_DATA_DIR=`pwd`
+    ./Scripts/run_NGS_get_coverage.sh "$LOCAL_DIR" > run_coverage.txt
+```
+***Output files:*** 
+
+./Results:
+
+ NA12878.alt_bwamem_GRCh38DH.20150718.CEU.low_coverage.bedtools_cov.txt		
+
+ NA12878.alt_bwamem_GRCh38DH.20150718.CEU.low_coverage.bedtools_hist.txt
+
+ NA12878.alt_bwamem_GRCh38DH.20150718.CEU.low_coverage.bedtools_cov_sum_stat.txt
+
+2. Conduct coverage analysis using `R`
+
+NGS_coverage_analysis.Rmd
+
+***Output file:*** 
+
+NGS_coverage_analysis.html
+
+## Software & versions:
+
+samtools-1.21
+
+bedtools v2.31.1
+
+R version 4.4.1 (2024-06-14)
