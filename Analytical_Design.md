@@ -1,18 +1,19 @@
 # Title: NGS data coverage analysis for NA12878
-# Author: Ying Du
+# Author: Ying D.
 # Date: 10-24-2024
 
 ## Project description 
 
-You get an NGS BAM file generated from whole genome sequencing (WGS) data aligned against the Genome in a Bottle (GIAB, NA12878/HG001) reference sample. The BAM file contains aligned reads from the sequencing process. Each read represents a fragment of DNA from the genome. The coverage at a specific genomic position is defined as the number of reads that overlap that position.
-
+Get an NGS BAM file generated from whole genome sequencing (WGS) data aligned against the Genome in a Bottle (GIAB, NA12878/HG001) reference sample. The BAM file contains aligned reads from the sequencing process. Each read represents a fragment of DNA from the genome. The coverage at a specific genomic position is defined as the number of reads that overlap that position.
 Please calculate the coverage(sequencing depth) for the given NA12878 BAM (https://www.internationalgenome.org/data-portal/sample/NA12878) file aligned against GRCH38 reference sequence. 
 
 ## Analytical plan design
 
 This analysis aims to assess read coverage across the entire genome (HG38) for the sample NA12878. My proposed analysis plan has two main aims.
 
-The first aim is to examine the read coverage at various genomic location, and determine the average sequencing coverage across the genomewith the non-zero coverage. The second aim is to analyze the distribution of read coverage across the genome, which will help to assess whether read coverage is evenly distributed throughout the genome or if there are any biases present.
+The first aim is to examine the read coverage at various genomic positions, and determine the average coverage across the genomewith the non-zero coverage. To accomplish this, we need to know how many unique genomic postions have read coverage, how many reads covered these positions and what is the total length of the combined genomic postions. Then use these values to calculate the average coverage. 
+
+The second aim is to analyze the distribution of read coverage across the genome, which will help to assess whether read coverage is evenly distributed throughout the genome or if there are any biases present. To accomplish this, we need to know the fraction of bases on chromosomes or entire genome and their corresponding depth of coverage.
 
 The detailed plan aims and objectives are listed below.
 
@@ -22,11 +23,11 @@ The detailed plan aims and objectives are listed below.
 * Generate a coverage file that displays the non-zero coverage for each position in the genome (base pairs with 0 coverage are excluded).
 * Count the total number of genomic positions with non-zero coverage.
 * Calculate the total number of reads by summing all the reads across genomic positions with the non-zero coverage.
-* Calculate the average read coverage per sequenced genomic position.
+* Calculate the average read coverage per read-covered genomic position.
    ```
    Formula: Coverage per sequenced position = Total_read_number / Total_postion_number
    ```
-* Calculate the total length of genomic postions with non-zero coverage (sequenced_genome_length) in base pairs (bp) by summing the lenght of genomic positions with the non-zero coverage.
+* Calculate the total length of combined genomic postions with non-zero coverage (sequenced_genome_length) in base pairs (bp) by summing the length of all genomic positions with the non-zero coverage.
 * Calculate the average read coverage per base pair on the sequenced genome.
    ```
    Formula: Coverage per base pair = Total_read_number / sequenced_genome_length
