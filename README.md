@@ -6,7 +6,7 @@ This is a `README` file to explain the files and directory structure in this rep
 ```text
 .
 ├── README.md
-├── Analytical_Design.md         <- File for the project analysis design, data source and scripts etc..  
+├── Analytical_Design.md         <- File for the project analysis design  
 |── NGS_coverage_analysis.html   <- The coverage analysis results
 ├── run_coverage.txt             <- log file for running the script
 ├── Data                         <- A directory that includes data to be processed. 
