@@ -11,9 +11,9 @@ Please calculate the coverage(sequencing depth) for the given NA12878 BAM (https
 
 This analysis aims to assess read coverage across the entire genome (HG38) for the sample NA12878. My proposed analysis plan has two main aims.
 
-The first aim is to examine the read coverage at various genomic positions, and determine the average coverage across the genomewith the non-zero coverage. To accomplish this, we need to know how many unique genomic postions have read coverage, how many reads covered these positions and what is the total length of the combined genomic postions. Then use these values to calculate the average coverage. 
+The first aim is to examine the read coverage at various genomic positions, and determine the average coverage across the genomewith the non-zero coverage. To accomplish this, we need to generate a coverage file for various genomic positions and calculate the following: the number of unique genomic positions with read coverage, the total number of reads that cover these positions, and the total length of the combined genomic positions. We can then use these values to calculate the average coverage.
 
-The second aim is to analyze the distribution of read coverage across the genome, which will help to assess whether read coverage is evenly distributed throughout the genome or if there are any biases present. To accomplish this, we need to know the fraction of bases on chromosomes or entire genome and their corresponding depth of coverage.
+The second aim is to analyze the distribution of read coverage across the genome, which will help to assess whether read coverage is evenly distributed throughout the genome or if there are any biases present. To accomplish this, we need to generate a histogram of coverage file to determine the fraction of bases on the chromosomes or the entire genome, along with their corresponding depth of coverage
 
 The detailed plan aims and objectives are listed below.
 
@@ -63,12 +63,14 @@ curl 'ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/data_collections/1000_genomes_pro
 ```
 bedtools genomecov -ibam NA12878.alt_bwamem_GRCh38DH.20150718.CEU.low_coverage.cram -bg > NA12878.alt_bwamem_GRCh38DH.20150718.CEU.low_coverage.bedtools_cov.txt
 ```
-Example output: 
+Example output:    
 |          |          |          |          |
 |----------|----------|----------|----------|
 | chr1 | 9997 | 9998  | 1 |
 | chr1 | 9998 | 9999  | 2 |
 | chr1 | 9999 | 10000 | 5 |
+
+
 > NOTE: 
  1. column 1: chromosome or genome;
  2. column 2: start position;
