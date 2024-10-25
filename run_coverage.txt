@@ -1,0 +1,7 @@
+Directory exits
+Process the data: /Users/yingdu/Documents/GitHub/NGS-coverage-analysis/Data/NA12878.alt_bwamem_GRCh38DH.20150718.CEU.low_coverage.cram
+/Users/yingdu/Documents/GitHub/NGS-coverage-analysis/Results/NA12878.alt_bwamem_GRCh38DH.20150718.CEU.low_coverage
+Step 1: using Bedtools to get the coverage data: # of reads overlapping the position
+Step 2: using Bedtools to get the coverage histogram file: percent of reads overlapping the position
+Step 3a:  Extract the overall coverage stats from the coverage file
+Step 3b: Total covered region: 

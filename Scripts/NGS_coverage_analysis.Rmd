@@ -1,0 +1,177 @@
+---
+title: "NGS coverage analysis for NA12878"
+author: "Ying Du"
+date: "2024-10-24"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Load R packages, set paths & functions
+```{r}
+suppressMessages(
+  c(
+    library(ggplot2),
+    library(tidyverse),
+    library(DT)
+  )
+)
+
+PRJ_ID   <- "Documents/GitHub/NGS-coverage-analysis"
+PRJ_DIR  <- file.path('~', PRJ_ID) 
+DATA_DIR <- file.path(PRJ_DIR, "Results")
+
+plot.theme <- theme(
+  plot.margin = margin(2, 2, 2, 2),
+  text = element_text(size = 10,face="bold"),
+   
+  axis.text = element_text(size = 12, color = "black" ),
+ 
+  axis.title = element_text(size = 16, margin = unit(c(0, 10, 0, 0), "mm")),
+  plot.title = element_text(size = 20, margin = unit(c(0, 10, 0, 0), "mm")),
+  panel.grid.minor = element_line(color = "gray",
+                                   linewidth = 0.25,
+                                   linetype = "dotted"),
+  panel.grid.major =  element_line(color = "gray",
+                                   linewidth = 0.25,
+                                   linetype = 1),
+  panel.background = element_blank(),
+  axis.line = element_line(colour = "black"),
+  legend.title = element_blank(), 
+  legend.position = "none"
+) 
+```
+
+### Coveage analysis
+### Aim 1. Determine the average read coverage depth across the genome with the non-zero coverage
+```{r}
+f1 <- read.table(file = file.path(DATA_DIR, 
+                                  "NA12878.alt_bwamem_GRCh38DH.20150718.CEU.low_coverage.bedtools_cov_sum_stat.txt"), 
+                 header = F, 
+                 sep = "\t", 
+                 as.is = T
+                 ) %>% rename( STAT = V1)
+
+datatable(f1, options = list(pageLength = 5, autoWidth = TRUE))
+# Calculate the average read coverage per covered genomic position
+2558464478/301290198
+
+# Calculate the average read coverage per base pair on the genome with non-zero coverage
+2558464478/2971628772
+
+# Summary: 
+# The average coverage per covered genomic position on the genome with non-zero coverage for NA12878 is approximately 8 reads per genomic position, and the average coverage per base pair on the genome with non-zero coverage is approximately 0.8 read per base pair.  Additionally, about 93% of the genome has sequence coverage. 
+# Note: these coverage values might not be accurate, as the coverage data from this sample includes not only 23 chromosomes but also mitochondria chromosome and other specific alternative sequence or assembly for a portion of chromosomes, eg.chr19_KI270938v1_alt, etc..
+```
+### Aim 2. Analyze the distribution of read coverage across the genome 
+```{r}
+f2 <- read.table(file   = file.path(DATA_DIR,                            "NA12878.alt_bwamem_GRCh38DH.20150718.CEU.low_coverage.bedtools_hist.txt"), 
+                 header = F, 
+                 sep    = "\t", 
+                 as.is  = T
+) %>% rename(feature    = V1, 
+             depth      = V2, 
+             base_number= V3, 
+             chr_size   = V4, 
+             base_frac  = V5 ) 
+
+head(f2)
+```
+ 
+## 2.1. Genome-wide coverage distribution
+ 
+```{r, fig.width=10, fig.height=6}
+# Extract the genome-wide distribution information
+genome_coverage <- f2 %>%
+  filter(feature == "genome")
+head(genome_coverage)
+
+# Some analysis on the fraction of bases on the genome with various depth of coverage
+genome.out <- genome_coverage %>% 
+  mutate(
+    idx = case_when(
+      depth == 0 ~ "Coverage = 0", 
+      depth <= 50 & depth != 0 ~ "Coverage < 50",
+      depth > 50 ~ "Coverage > 50", 
+      .default = as.character(depth)
+      )) 
+
+table(genome.out$idx)
+
+out.frac <- genome.out %>%
+  group_by(idx) %>%
+  summarise(Tot_frac = sum(base_frac))
+out.frac
+
+# Summary: 
+# 1. The majority portion of the genome (>92%) was covered by 1 to 50 reads. That is, the majority of fraction of bases on the genome has depth of coverage between 1 to 50. 
+# 2. A very small portion of the genome (0.06%) was covered by more than 50 reads.That is, a very small fraction of bases on the genome has depth of coverage more than 50. 
+# 3. A small portion of the genome (7.64%) has no read coverage.That is, a small fraction of bases on the genome has 0 coverage. 
+```
+```{r, fig.width=10, fig.height=6}
+# Filter out the genome portions with depth > 50 
+genome_coverage.fit <- genome_coverage %>% 
+  filter(depth <= 50)
+
+datatable(genome_coverage.fit, options = list(pageLength = 5, autoWidth = TRUE))
+
+# Plot the genome-wide coverage density plot
+ggplot(genome_coverage.fit, 
+       aes(x = depth, y = base_frac)) + 
+  geom_bar(stat = "identity", fill = "gray") + 
+  scale_y_continuous(limits = c(0, 0.15)) +
+  geom_text(aes(label = depth), position=position_dodge(width=0.9), vjust=-0.25) + 
+  labs(x = "Read Depth", y = "Fraction of Genome at Read Depth", title = "Genome-Wide Coverage distribution") + 
+  plot.theme
+```
+
+```{r}
+# Summary: The genome-wide coverage distribution is right-skewed. 
+# 1. About 10% of bases on the genome is covered by 3 reads. 
+# 2. About 10% of bases on the genome is covered by 7 reads. 
+# 3. About 12.5% of bases on the genome is covered by 4 or 6 reads.
+# 4. More than 13% of bases on the genome is covered by 5 reads.
+# Together, half of bases on the genome is covered by at least 3 reads.
+```
+```{r}
+# The top 10 genome fractions with the corresponding read depth
+genome_top <- 
+  genome_coverage.fit %>% 
+  arrange(desc(base_frac)) %>%
+  head(n=10)
+genome_top
+
+datatable(genome_top, options = list(pageLength = 5, autoWidth = TRUE))
+```
+
+## 2.2 Chromosome-wide coverage distribution
+
+```{r, fig.width=10, fig.height=10}
+# Extract the chromosome-wide distribution information: only investigate 22 autosomes and X & Y sex chromosomes. 
+chr_coverage <- f2 %>%
+  filter(!feature %in% c("genome", "chrEBV") & !str_detect(feature, "_|-"))
+
+head(chr_coverage)
+
+# Filter out the chromosome portions with depth > 50 
+chr_coverage.fit <- chr_coverage %>% 
+  filter(depth <= 50)
+
+# Plot the genome-wide coverage density plot
+ggplot(chr_coverage.fit %>% 
+         mutate(feature = factor(feature, 
+                                 levels = str_sort(unique(feature), numeric = T)))
+         , 
+       aes(x = depth, y = base_frac)) + 
+  geom_bar(stat = "identity", fill = "gray") + 
+  facet_wrap(.~feature, scales = "free_y") +
+   labs(x = "Read Depth", y = "Fraction of Genome at Read Depth", title = "Genome-Wide Coverage distribution") + 
+  plot.theme
+
+# Summary: the chromosome-wide coverage distribution is a right-skewed distribution except chrY. For most of chromosomes (except chrY), more than 5% of bases on the chromosome is covered by at least 2 reads. For majority of the chromosomes (except chr22 & Y), more than 10% of bases on chromosomes were covered by at least 4 reads.
+```
+```{r}
+sessionInfo()
+```

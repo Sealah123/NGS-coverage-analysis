@@ -1,0 +1,4 @@
+Total number of reads across all read-covered positions:  2558464478 
+Total number of read-covered positions:  301290198 
+Total Length of Read Covered Genome Regions (bp): 2971628772 
+The proportion of GRCh38 has coverage (%): 92.8634
